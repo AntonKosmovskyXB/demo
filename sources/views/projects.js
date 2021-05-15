@@ -209,8 +209,7 @@ export default class ProjectsView extends JetView {
 				},
 				{
 					view: "yandex-map",
-					zoom: 6,
-					height: 650
+					localId: "map"
 				}
 			]
 		};
@@ -227,5 +226,8 @@ export default class ProjectsView extends JetView {
 				}
 			]
 		};
+	}
+
+	init() {
 	}
 }

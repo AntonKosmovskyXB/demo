@@ -14,7 +14,7 @@ export default class DashboardView extends JetView {
 					borderless: true,
 					localId: "listToolbar",
 					css: "listToolbar",
-					height: 100,
+					height: 90,
 					rows: [
 						{
 							cols: [
@@ -29,44 +29,71 @@ export default class DashboardView extends JetView {
 									label: "EXCEPTIONS"
 								},
 								{
-									view: "combo",
+									view: "richselect",
+									localId: "phaseFilter",
 									placeholder: "Project phase",
 									options: [
-										{id: 1, value: "Phase 1"},
-										{id: 2, value: "Phase 2"},
-										{id: 3, value: "Phase 3"}
-									]
-
+										{value: "delivery"},
+										{value: "innovation"},
+										{value: "collection"}
+									],
+									on: {
+										onchange: (value) => {
+											this.countryFilter.setValue("");
+											this.cityFilter.setValue("");
+											this.highPriorityList.filter("#projectPhase#", value);
+											this.mediumPriorityData.filter("#projectPhase#", value);
+											this.phaseFilter.setValue(value);
+										}
+									}
 								}
 							]
 						},
 						{
 							cols: [
 								{
-									view: "combo",
+									view: "richselect",
+									localId: "countryFilter",
 									placeholder: "Country",
 									options: [
-										{id: 1, value: "Great Britain"},
-										{id: 2, value: "Germany"},
-										{id: 3, value: "Netherlands"}
-									]
+										{value: "Great Britain"},
+										{value: "Ireland"},
+										{value: "Netherlands"}
+									],
+									on: {
+										onchange: (value) => {
+											this.cityFilter.setValue("");
+											this.phaseFilter.setValue("");
+											this.highPriorityList.filter("#country#", value);
+											this.mediumPriorityData.filter("#country#", value);
+											this.countryFilter.setValue(value);
+										}
+									}
 
 								},
 								{
-									view: "combo",
+									view: "richselect",
+									localId: "cityFilter",
 									placeholder: "City",
 									options: [
-										{id: 1, value: "Amsterdam"},
-										{id: 2, value: "Manchester"},
-										{id: 3, value: "Dublin"}
-									]
-
+										{value: "Amsterdam"},
+										{value: "Manchester"},
+										{value: "Dublin"}
+									],
+									on: {
+										onchange: (value) => {
+											this.countryFilter.setValue("");
+											this.phaseFilter.setValue("");
+											this.highPriorityList.filter("#firstCity#", value);
+											this.mediumPriorityData.filter("#city#", value);
+											this.cityFilter.setValue(value);
+										}
+									}
 								}
 							]
 						}
 					]
 				},
-
 				{
 					view: "scrollview",
 					scroll: "y",
@@ -265,8 +292,15 @@ export default class DashboardView extends JetView {
 	}
 
 	init() {
-		this.$$("highPriorityList").sync(highPriorityData);
-		this.$$("mediumPriorityList").sync(mediumPriorityData);
+		this.popup = this.ui(newProjectPopup);
+		this.phaseFilter = this.$$("phaseFilter");
+		this.countryFilter = this.$$("countryFilter");
+		this.cityFilter = this.$$("cityFilter");
+		this.highPriorityList = this.$$("highPriorityList");
+		this.mediumPriorityData = this.$$("mediumPriorityList");
+
+		this.highPriorityList.sync(highPriorityData);
+		this.mediumPriorityData.sync(mediumPriorityData);
 		this.$$("barChart").sync((highPriorityData), () => {
 			this.$$("barChart").group({
 				by: "firstCity",
@@ -275,6 +309,5 @@ export default class DashboardView extends JetView {
 				}
 			});
 		});
-		this.popup = this.ui(newProjectPopup);
 	}
 }
