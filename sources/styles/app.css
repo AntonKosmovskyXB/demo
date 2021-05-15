@@ -95,8 +95,9 @@
     font-size: 20px;
     color: #02278b;
     border: 3px solid #FC3636;
-    padding: 5px;
+    padding: 4px;
     width: 200px !important;
+    height: 38px !important;
     line-height: 25px !important;
 }
 
@@ -105,7 +106,8 @@
     justify-content: flex-end !important;
 }
 
-.graphics-toolbar-buttons .webix_el_box .webix_button {
+.graphics-toolbar-buttons .webix_el_box .webix_button,
+.projects-toolbar-buttons .webix_el_box .webix_button {
     border-radius: 10px;
 }
 
@@ -135,8 +137,20 @@
     font-weight: 800;
 }
 
+.projects-stores-num {
+    font-size: 30px;
+    font-weight: 800;  
+}
+
 .graphicsGridCell {
     border-radius: 25px;
 }
 
+.underlined {
+    text-decoration: underline;
+    padding-bottom: 3px;
+}
 
+.webix_win_head .webix_toolbar .webix_el_label .webix_el_box {
+    margin-left: 30px;
+}

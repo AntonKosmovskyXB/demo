@@ -1,6 +1,8 @@
 import {JetView} from "webix-jet";
 
-import data from "../models/dashboardData";
+import highPriorityData from "../models/highPriorityData";
+import mediumPriorityData from "../models/mediumPriorityData";
+import newProjectPopup from "./newProjectPopup";
 
 export default class DashboardView extends JetView {
 	config() {
@@ -27,7 +29,7 @@ export default class DashboardView extends JetView {
 									label: "EXCEPTIONS"
 								},
 								{
-									view: "richselect",
+									view: "combo",
 									placeholder: "Project phase",
 									options: [
 										{id: 1, value: "Phase 1"},
@@ -41,7 +43,7 @@ export default class DashboardView extends JetView {
 						{
 							cols: [
 								{
-									view: "richselect",
+									view: "combo",
 									placeholder: "Country",
 									options: [
 										{id: 1, value: "Great Britain"},
@@ -51,7 +53,7 @@ export default class DashboardView extends JetView {
 
 								},
 								{
-									view: "richselect",
+									view: "combo",
 									placeholder: "City",
 									options: [
 										{id: 1, value: "Amsterdam"},
@@ -64,22 +66,59 @@ export default class DashboardView extends JetView {
 						}
 					]
 				},
+
 				{
-					view: "list",
-					localId: "dashboardList",
-					select: true,
-					type: {
-						template: obj => `
-						<div class="dashboard-list-item">
-							<div class="item-data">
-								<div class="bold-text">${obj.firstCityId}-${obj.firstCity}</div>
-								<div>${obj.secondCityId}-${obj.secondCity}</div>
-							</div>
-							<div>
-								<span class="mdi mdi-chevron-right"></span>
-							</div>
-						</div>`,
-						height: 60
+					view: "scrollview",
+					scroll: "y",
+					body: {
+						rows: [
+							{
+								view: "label",
+								label: "HIGH PRIORITY"
+							},
+							{
+								view: "list",
+								localId: "highPriorityList",
+								select: true,
+								autoheight: true,
+								type: {
+									template: obj => `
+									<div class="dashboard-list-item">
+										<div class="item-data">
+											<div class="bold-text">${obj.firstCityId}-${obj.firstCity}</div>
+											<div>${obj.secondCityId}-${obj.secondCity}</div>
+										</div>
+										<div>
+											<span class="mdi mdi-chevron-right"></span>
+										</div>
+									</div>`,
+									height: 60
+								}
+							},
+							{
+								view: "label",
+								label: "MEDIUM PRIORITY"
+							},
+							{
+								view: "list",
+								localId: "mediumPriorityList",
+								select: true,
+								autoheight: true,
+								type: {
+									template: obj => `
+									<div class="dashboard-list-item">
+										<div class="item-data">
+											<div class="bold-text">ORDER #: ${obj.numOfOrder}</div>
+											<div>${obj.cityId}-${obj.city}</div>
+										</div>
+										<div>
+											<span class="mdi mdi-chevron-right"></span>
+										</div>
+									</div>`,
+									height: 60
+								}
+							}
+						]
 					}
 				}
 			]
@@ -100,7 +139,10 @@ export default class DashboardView extends JetView {
 							icon: "wxi-plus",
 							label: "New project",
 							css: "graphics-toolbar-buttons",
-							width: 150
+							width: 150,
+							click: () => {
+								this.popup.showPopup();
+							}
 						},
 						{
 							view: "button",
@@ -135,32 +177,42 @@ export default class DashboardView extends JetView {
 									label: "#firstCity#",
 									value: "#firstCityId#",
 									radius: 70,
-									data
+									css: "graphicsGridCell",
+									data: highPriorityData
 								}
 							],
 							x: 1,
 							y: 0,
 							dx: 1,
-							dy: 2,
-							css: "graphicsGridCell"
+							dy: 2
 						},
 						{
-							cols: [
+							rows: [
 								{
 									view: "chart",
-									id: "pieChart",
-									type: "pie",
-									label: "#firstCity#",
+									type: "radar",
 									value: "#firstCityId#",
-									radius: 70,
-									data
+									disableLines: true,
+									item: {
+										borderWidth: 0,
+										radius: 2,
+										color: "#3a838e"
+									},
+									xAxis: {
+										template: "#firstCity#"
+									},
+									yAxis: {
+										lineShape: "arc",
+										bg: "#fffbf4"
+									},
+									css: "graphicsGridCell",
+									data: highPriorityData
 								}
 							],
 							x: 0,
 							y: 2,
 							dx: 1,
-							dy: 2,
-							css: "graphicsGridCell"
+							dy: 2
 						},
 						{
 							view: "chart",
@@ -213,8 +265,9 @@ export default class DashboardView extends JetView {
 	}
 
 	init() {
-		this.$$("dashboardList").sync(data);
-		this.$$("barChart").sync((data), () => {
+		this.$$("highPriorityList").sync(highPriorityData);
+		this.$$("mediumPriorityList").sync(mediumPriorityData);
+		this.$$("barChart").sync((highPriorityData), () => {
 			this.$$("barChart").group({
 				by: "firstCity",
 				map: {
@@ -222,5 +275,6 @@ export default class DashboardView extends JetView {
 				}
 			});
 		});
+		this.popup = this.ui(newProjectPopup);
 	}
 }
