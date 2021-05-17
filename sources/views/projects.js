@@ -1,4 +1,3 @@
-import L from "leaflet";
 import {JetView} from "webix-jet";
 
 export default class ProjectsView extends JetView {
@@ -229,10 +228,5 @@ export default class ProjectsView extends JetView {
 				}
 			]
 		};
-	}
-
-	ready() {
-		const mymap = L.map("map");
-		L.marker([51.5, -0.09]).addTo(mymap);
 	}
 }

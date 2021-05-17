@@ -5,7 +5,7 @@ module.exports = function (env) {
 	let pack = require("./package.json");
 	let MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-	let production = !!(env && env.production === "true");
+	let production = !!(env && env.production === true);
 	let asmodule = !!(env && env.module === "true");
 	let standalone = !!(env && env.standalone === "true");
 

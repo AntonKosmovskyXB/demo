@@ -1,6 +1,7 @@
 import {JetView} from "webix-jet";
 
 import cities from "../models/cities";
+import mediumPriorityData from "../models/mediumPriorityData";
 
 export default class ProjectPopupView extends JetView {
 	config() {
@@ -20,7 +21,7 @@ export default class ProjectPopupView extends JetView {
 							},
 							{
 								view: "label",
-								label: "New request № 0123456"
+								label: "New request # 0123456"
 							},
 							{
 								view: "label",
@@ -82,7 +83,21 @@ export default class ProjectPopupView extends JetView {
 							{},
 							{
 								view: "icon",
-								icon: "mdi mdi-arrow-right"
+								icon: "mdi mdi-arrow-right",
+								click: () => {
+									if (this.form.validate()) {
+										const values = this.form.getValues();
+										const newCitiesList = values.addStore.split(",").map(item => +item);
+										mediumPriorityData.add({
+											city: cities.data.pull[newCitiesList[0]].city,
+											cityId: cities.data.pull[newCitiesList[0]].cityId,
+											numOfOrder: this.numOfOrder,
+											projectPhase: "delivery",
+											country: cities.data.pull[newCitiesList[0]].country
+										});
+										this.closePopup();
+									}
+								}
 							}
 						]
 					}
@@ -99,10 +114,12 @@ export default class ProjectPopupView extends JetView {
 	init() {
 		this.popup = this.getRoot();
 		this.form = this.$$("popupForm");
+		this.numOfOrder = this.getRandomInt(100000, 199999);
 	}
 
 	showPopup() {
 		this.popup.show();
+		this.numOfOrder = this.getRandomInt(100000, 199999);
 	}
 
 	fillDatepickerData(date) {
@@ -123,5 +140,11 @@ export default class ProjectPopupView extends JetView {
 		const datapicker = this.$$("popupDatepicker");
 		const dateInput = datapicker.getInputNode();
 		dateInput.innerHTML = "";
+	}
+
+	getRandomInt(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 }

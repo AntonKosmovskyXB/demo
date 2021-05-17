@@ -58,7 +58,9 @@ export default class DashboardView extends JetView {
 									options: [
 										{value: "Great Britain"},
 										{value: "Ireland"},
-										{value: "Netherlands"}
+										{value: "Netherlands"},
+										{value: "Belgium"},
+										{value: "Germany"}
 									],
 									on: {
 										onchange: (value) => {

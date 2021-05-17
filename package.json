@@ -11,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint sources/",
-    "build": "webpack --env.production true",
+    "build": "webpack --env production",
     "module": "webpack --env.production true --env.module true",
     "precommit": "lint-staged",
     "standalone": "webpack --env.production true --env.module true --env.standalone true",
