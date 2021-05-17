@@ -1,3 +1,4 @@
+import L from "leaflet";
 import {JetView} from "webix-jet";
 
 export default class ProjectsView extends JetView {
@@ -209,9 +210,7 @@ export default class ProjectsView extends JetView {
 				},
 				{
 					view: "open-map",
-					localId: "map",
-					zoom: 10,
-					center: [51.505, -0.09]
+					localId: "map"
 				}
 			]
 		};
@@ -228,5 +227,15 @@ export default class ProjectsView extends JetView {
 				}
 			]
 		};
+	}
+
+	init() {
+		this.$$("map").getMap(true).then((mapObj) => {
+			const mymap = mapObj.setView([52.22, 4.53], 10);
+			L.marker([52.35, 4.88]).addTo(mymap);
+			L.marker([51.21, 4.4]).addTo(mymap);
+			L.marker([53.48, -2.23]).addTo(mymap);
+			L.marker([53.33, -6.25]).addTo(mymap);
+		});
 	}
 }
